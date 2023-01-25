@@ -1,6 +1,6 @@
 key parts of the project:
 - calculation functions
-    * add, subtract, multiply, devide
+    * add, subtract, multiply, divide
 
 - look and feel of the calc
     * keys: 10 digs, 4 operations, 1 =, 1 clear, 1 backspace, 1 dot
@@ -9,8 +9,16 @@ key parts of the project:
     
 - response to  keypress & clicks
     * populate the numbers and operators when pressed
-    * clear the display area when C is pressed
-    * display result when operator or = is pressed after 1 pair of number is input
-    * once result is displayed, only accept operator or =, not number
+        * show every number in the display when pressed
+        * when operator pressed after number, store the number in an input array and show operator sign
+        * when 2nd and more operator pressed, 
+            * if there are already 2 numbers in input array and 
+                * result array is empty, do the math and store result in result array
+                * if the result array is not empty, use that result to do the math with the last item in input array
+        * if one operator is pressed after another, use the last operator
+        * do nothing if user press operator first        
+        * clear the display area when C is pressed
+        * once result is displayed, only accept operator or =, not number
+    
     * Pressing = before entering all of the numbers or an operator could cause problems!
     * can't input more than 1 dot
