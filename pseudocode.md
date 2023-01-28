@@ -12,12 +12,16 @@ key parts of the project:
         * show every number in the display when pressed
         * when operator pressed after number, store the number in an input array and show operator sign
         * when 2nd and more operator pressed, 
-            * if there are already 2 numbers in input array and 
-                * result array is empty, do the math and store result in result array
-                * if the result array is not empty, use that result to do the math with the last item in input array
+            * if there are already 2 numbers in input array  
+                * result array is empty, do the math and store result in result, clear the queue
+                * after result shown:
+                    * if user press operator, use that result to do the math with the last num in input array
+                    * if user input another num, put at 1st of input array     
         * if one operator is pressed after another, use the last operator
-        * do nothing if user press operator first        
+        * do nothing if user press operator first   
+        * when only 1 num is input and user press =, ignore it
         * clear the display area when C is pressed
+            * lastKeyPressed should be cleared
         * once result is displayed, only accept operator or =, not number
     
     * Pressing = before entering all of the numbers or an operator could cause problems!

@@ -7,32 +7,36 @@ let displayInput = '';
 const keys = document.querySelectorAll('.key');
 const display = document.getElementById('display');
 display.value = '0';
-let keySequence;
+let lastKeyPressed;
 
 for (let key of keys) {
     key.addEventListener('click', (e) => {
         const keyPressed = e.target.innerText;
-        // keySequence.pop(keyPressed);
-        // console.log('keySequence', keySequence);
-        if ('+-*/'.includes(keySequence) && '+-*/'.includes(keyPressed)) {
-            inputOperators[inputOperators.length - 1] = keyPressed;
 
+        if (!lastKeyPressed && '+-*/='.includes(keyPressed)) return //first key can't be operator.
+
+        if ('+-*/='.includes(lastKeyPressed) && '+-*/='.includes(keyPressed)) {//only last operator is recorded if multiple operators pressed  in a row. Same applies if after pressing =, then press an operator to use the result as operand) 
+
+            inputOperators[inputOperators.length - 1] = keyPressed;
             return
         }
-        keySequence = keyPressed;
+        if (lastKeyPressed === '=' && !'+-*/='.includes(keyPressed)) { //re-initialize the calculator if user input new num after last result
+            inputNums.splice(0, inputNums.length);
+            inputOperators.splice(0, inputOperators.length);
+        }
+        lastKeyPressed = keyPressed;
+
         if (!'+-*/='.includes(keyPressed)) {
             populateNum(key);
         } else if (inputOperators.length >= 1) {
             storeOperator(keyPressed);
             storeNum();
             doMath();
-            display.value = result;
-            displayInput = '';
-            inputNums[0] = result;
+
         } else {
             storeNum();
             storeOperator(keyPressed);
-            display.value = '';
+            // display.value = '';
             displayInput = '';
         }
     }
@@ -72,7 +76,10 @@ function doMath() {
             result = inputNums[0] - inputNums[1]
             break;
     }
-
+    display.value = result;
+    displayInput = ''; //clear captured input queue 
+    inputNums[0] = result;
+    inputNums.splice(1, 1);
 }
 
 // display.addEventListener('input', e => console.log(e));
