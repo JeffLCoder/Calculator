@@ -12,15 +12,17 @@ let lastKeyPressed;
 for (let key of keys) {
     key.addEventListener('click', (e) => {
         const keyPressed = e.target.innerText;
-
-        if (!lastKeyPressed && '+-*/='.includes(keyPressed)) return //first key can't be operator.
+        console.log('keyPressed', keyPressed);
+        if (!lastKeyPressed && '+-*/='.includes(keyPressed)) return //first key can't be operator. 
 
         if ('+-*/='.includes(lastKeyPressed) && '+-*/='.includes(keyPressed)) {//only last operator is recorded if multiple operators pressed  in a row. Same applies if after pressing =, then press an operator to use the result as operand) 
 
-            inputOperators[inputOperators.length - 1] = keyPressed;
+            inputOperators.pop();
+            inputOperators.push(keyPressed);
+            lastKeyPressed = keyPressed;
             return
         }
-        if (lastKeyPressed === '=' && !'+-*/='.includes(keyPressed)) { //re-initialize the calculator if user input new num after last result
+        if (lastKeyPressed === '=' && !'+-*/='.includes(keyPressed)) { //re-initialize the calculator if user input new num after last result (i.e. pressing =)
             inputNums.splice(0, inputNums.length);
             inputOperators.splice(0, inputOperators.length);
         }
@@ -29,15 +31,13 @@ for (let key of keys) {
         if (!'+-*/='.includes(keyPressed)) {
             populateNum(key);
         } else if (inputOperators.length >= 1) {
-            storeOperator(keyPressed);
-            storeNum();
+            storeInput(keyPressed);
+
             doMath();
 
         } else {
-            storeNum();
-            storeOperator(keyPressed);
-            // display.value = '';
-            displayInput = '';
+            storeInput(keyPressed);
+
         }
     }
     )
@@ -48,18 +48,35 @@ function populateNum(elem) {
     display.value = displayInput;
     console.log('displayInput', displayInput)
 }
-function storeNum() {
-    if (!inputNums[0]) {
-        inputNums[0] = parseFloat(displayInput);
-    } else {
-        inputNums[1] = parseFloat(displayInput);
+function storeInput(op) {
+    if (parseFloat(displayInput)) { //input num can't be dot only
+        if (!inputNums[0]) {
+            inputNums[0] = parseFloat(displayInput);
+        } else {
+            inputNums[1] = parseFloat(displayInput);
+        }
+        displayInput = '';//clear input queue only after valid num input is captured
+
+        if (op === '=' && inputNums.length <= 1) {
+            return
+        } else {
+            inputOperators.push(op);
+            console.log('inputOperators', inputOperators)
+        }
     }
+    // else {
+    //     inputOperators.pop(); //clear last op input if input num is invalid
+    // }
     console.log('storedNum', inputNums)
 }
-function storeOperator(op) {
-    inputOperators.push(op);
-    console.log('inputOperators', inputOperators)
-}
+// function storeOperator(op) {
+//     if (op === '=' && inputNums.length <= 1) {
+//         return
+//     } else {
+//         inputOperators.push(op);
+//         console.log('inputOperators', inputOperators)
+//     }
+// }
 
 function doMath() {
     switch (inputOperators[inputOperators.length - 2]) {
@@ -77,9 +94,11 @@ function doMath() {
             break;
     }
     display.value = result;
-    displayInput = ''; //clear captured input queue 
+
     inputNums[0] = result;
     inputNums.splice(1, 1);
+    console.log('storedNum', inputNums);
+    console.log('inputOperators', inputOperators)
 }
 
 // display.addEventListener('input', e => console.log(e));
