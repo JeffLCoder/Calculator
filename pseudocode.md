@@ -23,6 +23,7 @@ key parts of the project:
         * clear the display area when C is pressed
             * lastKeyPressed should be cleared
         * once result is displayed, only accept operator or =, not number
+        * can't input more than 1 dot
+        * can't input operator after only dot
     
     * Pressing = before entering all of the numbers or an operator could cause problems!
-    * can't input more than 1 dot

@@ -14,6 +14,14 @@ for (let key of keys) {
         const keyPressed = e.target.innerText;
         console.log('keyPressed', keyPressed);
         if (!lastKeyPressed && '+-*/='.includes(keyPressed)) return //first key can't be operator. 
+        if (keyPressed === 'C') {
+            inputNums.splice(0, inputNums.length);
+            inputOperators.splice(0, inputOperators.length);
+            display.value = '0';
+            displayInput = '';
+            return
+        }
+        if (keyPressed === '.' && display.value.includes('.')) return
 
         if ('+-*/='.includes(lastKeyPressed) && '+-*/='.includes(keyPressed)) {//only last operator is recorded if multiple operators pressed  in a row. Same applies if after pressing =, then press an operator to use the result as operand) 
 
@@ -42,6 +50,7 @@ for (let key of keys) {
     }
     )
 }
+
 
 function populateNum(elem) {
     displayInput += elem.innerText;
