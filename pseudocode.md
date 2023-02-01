@@ -3,7 +3,7 @@ key parts of the project:
     * add, subtract, multiply, divide
 
 - look and feel of the calc
-    * keys: 10 digs, 4 operations, 1 =, 1 clear, 1 backspace, 1 dot
+    * keys: 10 digs, 4 operations, = 1 clear, 1 backspace, 1 dot
     * round result with long decimals so that they don’t overflow the screen
     * error message if the user tries to divide by 0
     
