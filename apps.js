@@ -78,6 +78,7 @@ function storeInput(op) {
     } else {
         inputNums[1] = parseFloat(displayInput);
     }
+    display.value = Number(display.value).toString(); //remove it if last dig is '.' for any number
     displayInput = '0';//clear input queue only after valid num input is captured
     if (op === '=' && inputNums.length <= 1) {
         return
