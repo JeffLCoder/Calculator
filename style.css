@@ -54,6 +54,11 @@ div.key {
     height: 3rem;
 }
 
+.row1-col3 {
+    grid-row: 1;
+    grid-column: 3;
+}
+
 .row1-col4 {
     grid-row: 1;
     grid-column: 4;

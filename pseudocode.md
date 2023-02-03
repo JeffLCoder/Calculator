@@ -27,3 +27,8 @@ key parts of the project:
         * can't input operator after only dot
     
     * Pressing = before entering all of the numbers or an operator could cause problems!
+
+    - 1 backspace,
+    - 2nd display
+    - limited dig
+    - keyboard input

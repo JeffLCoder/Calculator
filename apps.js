@@ -1,25 +1,26 @@
 
-// capture  input
+
 const inputNums = [];
 const inputOperators = [];
-let result;
-let displayInput = '0';
 const keys = document.querySelectorAll('.key');
 const display = document.getElementById('display');
-display.value = '0';
+let result;
+let displayInput = '0';
 let lastKeyPressed;
+display.value = '0';
 
 for (let key of keys) {
     key.addEventListener('click', (e) => {
         const keyPressed = e.target.innerText;
-        console.log('keyPressed', keyPressed);
-
+        // console.log(e.target.innerText === '←');
         if (!lastKeyPressed && '+-*/='.includes(keyPressed)) { //first input can't be operator.          
+            return
+        } else if (keyPressed === '.' && display.value.includes('.')) { //no 2 dots
+            return
+        } else if (keyPressed === '←' && '+-*/='.includes(lastKeyPressed)) { //ignore ← key after operator
             return
         } else if (keyPressed === 'C') {
             initCalc();
-            return
-        } else if (keyPressed === '.' && display.value.includes('.')) { //no 2 dots
             return
         } else if ('+-*/='.includes(lastKeyPressed) && '+-*/='.includes(keyPressed)) {//only last operator is recorded if multiple operators pressed  in a row. Same applies if after pressing =, then press an operator to use the result as operand) 
             inputOperators.pop();
@@ -33,7 +34,7 @@ for (let key of keys) {
         lastKeyPressed = keyPressed;
 
         if (!'+-*/='.includes(keyPressed)) {
-            populateNum(key);
+            populateNum(keyPressed);
         } else if (inputOperators.length >= 1) {
             storeInput(keyPressed);
             doMath();
@@ -52,42 +53,39 @@ function initCalc() {
 }
 
 function populateNum(elem) {
-    displayInput += elem.innerText;
+    if (elem === '←') {
+        display.value = display.value.length === 1 ? '0' : display.value.slice(0, -1);
+        displayInput = display.value;
+    } else {
+        displayInput += elem;
 
-    // if (displayInput[0] === '0' && displayInput.length > 1 && Number(displayInput) !== 0) {
-    //     displayInput = displayInput.slice(1); //e.g. 05 will be shown as 5.
-    // }
-    // display.value = displayInput;
-    if (displayInput[0] === '0' && Number(displayInput) !== 0 && Number(displayInput) >= 1) {
-        // if ( displayInput.slice(-1) === '.') 
-        displayInput = displayInput.slice(1); //e.g. 05 will be shown as 5.
-        // } else {
-        //     displayInput = displayInput.slice(1);
-    }
-    else if (displayInput === '00') {
-        displayInput = '0';
-    }
-    display.value = displayInput;
+        if (displayInput[0] === '0' && Number(displayInput) !== 0 && Number(displayInput) >= 1) {
+            displayInput = displayInput.slice(1); //e.g. 05 will be shown as 5.
 
-    console.log('displayInput', displayInput)
+        }
+        else if (displayInput === '00') {
+            displayInput = '0';
+        }
+        display.value = displayInput;
+    }
 }
+
 function storeInput(op) {
-    // if (displayInput !== '.') { //input num can't be dot only
+
     if (!inputNums.length) {
         inputNums[0] = parseFloat(displayInput);
     } else {
         inputNums[1] = parseFloat(displayInput);
     }
-    display.value = Number(display.value).toString(); //remove it if last dig is '.' for any number
+    // !inputNums.length ? inputNums[0] = parseFloat(displayInput) : inputNums[1] = parseFloat(displayInput);
+
+    display.value = Number(display.value).toString(); //remove '.' at end from number
     displayInput = '0';//clear input queue only after valid num input is captured
     if (op === '=' && inputNums.length <= 1) {
         return
     } else {
         inputOperators.push(op);
     }
-    // }
-    console.log('inputOperators', inputOperators)
-    console.log('storedNum', inputNums)
 }
 
 
@@ -110,8 +108,7 @@ function doMath() {
 
     inputNums[0] = result;
     inputNums.splice(1, 1);
-    console.log('storedNum', inputNums);
-    console.log('inputOperators', inputOperators)
 }
+
 
 
