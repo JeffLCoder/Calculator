@@ -12,12 +12,10 @@ display.value = '0';
 for (let key of keys) {
     key.addEventListener('click', (e) => {
         const keyPressed = e.target.innerText;
-        // console.log(e.target.innerText === '←');
-        if (!lastKeyPressed && '+-*/='.includes(keyPressed)) { //first input can't be operator.          
-            return
-        } else if (keyPressed === '.' && display.value.includes('.')) { //no 2 dots
-            return
-        } else if (keyPressed === '←' && '+-*/='.includes(lastKeyPressed)) { //ignore ← key after operator
+        if ((!lastKeyPressed && '+-*/='.includes(keyPressed)) || //first input can't be operator.  
+            (keyPressed === '.' && display.value.includes('.')) || //no 2 dots
+            (keyPressed === '←' && '+-*/='.includes(lastKeyPressed))) //ignore ← key after operator
+        {
             return
         } else if (keyPressed === 'C') {
             initCalc();
