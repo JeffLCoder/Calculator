@@ -8,39 +8,57 @@ let result;
 let displayInput = '0';
 let lastKeyPressed;
 display.value = '0';
+display.disabled = true; //disable direct keyboard input
 
 for (let key of keys) {
     key.addEventListener('click', (e) => {
         const keyPressed = e.target.innerText;
-        if ((!lastKeyPressed && '+-*/='.includes(keyPressed)) || //first input can't be operator.  
-            (keyPressed === '.' && display.value.includes('.')) || //no 2 dots
-            (keyPressed === '←' && '+-*/='.includes(lastKeyPressed))) //ignore ← key after operator
-        {
-            return
-        } else if (keyPressed === 'C') {
-            initCalc();
-            return
-        } else if ('+-*/='.includes(lastKeyPressed) && '+-*/='.includes(keyPressed)) {//only last operator is recorded if multiple operators pressed  in a row. Same applies if after pressing =, then press an operator to use the result as operand) 
-            inputOperators.pop();
-            inputOperators.push(keyPressed);
-            lastKeyPressed = keyPressed;
-            return
-        } else if (lastKeyPressed === '=' && !'+-*/='.includes(keyPressed)) { //clear arrays if user input new num after last result)
-            inputNums.splice(0, inputNums.length);
-            inputOperators.splice(0, inputOperators.length);
-        }
-        lastKeyPressed = keyPressed;
-
-        if (!'+-*/='.includes(keyPressed)) {
-            populateNum(keyPressed);
-        } else if (inputOperators.length >= 1) {
-            storeInput(keyPressed);
-            doMath();
-        } else {
-            storeInput(keyPressed);
-        }
+        processKey(keyPressed);
     }
     )
+}
+
+window.addEventListener('keydown', (e) => {
+    // console.log(e.key);
+    if ('0123456789./*-+='.includes(e.key)) {
+        processKey(e.key);
+    } else if (e.key === 'Backspace') {
+        processKey('←');
+    } else if (e.key === 'Enter') {
+        processKey('=');
+    }
+    return
+}
+)
+
+function processKey(keyPressed) {
+    if ((!lastKeyPressed && '+-*/='.includes(keyPressed)) || //first key input can't be operator.  
+        (keyPressed === '.' && display.value.includes('.')) && displayInput.includes('.') || //ignore 2nd dot in number unless right after result
+        (keyPressed === '←' && '+-*/='.includes(lastKeyPressed))) //ignore ← key after operator
+    {
+        return
+    } else if (keyPressed === 'C') {
+        initCalc();
+        return
+    } else if ('+-*/='.includes(lastKeyPressed) && '+-*/='.includes(keyPressed)) {//only last operator is recorded if multiple operators pressed  in a row. Same applies if after pressing =, then press an operator to use the result as operand) 
+        inputOperators.pop();
+        inputOperators.push(keyPressed);
+        lastKeyPressed = keyPressed;
+        return
+    } else if (lastKeyPressed === '=' && !'+-*/='.includes(keyPressed)) { //clear arrays if user input new num after last result)
+        inputNums.splice(0, inputNums.length);
+        inputOperators.splice(0, inputOperators.length);
+    }
+    lastKeyPressed = keyPressed;
+
+    if (!'+-*/='.includes(keyPressed)) {
+        populateNum(keyPressed);
+    } else if (inputOperators.length >= 1) {
+        storeInput(keyPressed);
+        doMath();
+    } else {
+        storeInput(keyPressed);
+    }
 }
 
 function initCalc() {
