@@ -4,16 +4,18 @@ const inputNums = [];
 const inputOperators = [];
 const keys = document.querySelectorAll('.key');
 const display = document.getElementById('display');
+const smallDisplay = document.getElementById('small-display');
 let result;
 let displayInput = '0';
 let lastKeyPressed;
 display.value = '0';
 display.disabled = true; //disable direct keyboard input
+smallDisplay.disabled = true;
 
 for (let key of keys) {
     key.addEventListener('click', (e) => {
-        const keyPressed = e.target.innerText;
-        processKey(keyPressed);
+        // const keyPressed = e.target.innerText;
+        processKey(e.target.innerText);
     }
     )
 }
@@ -32,7 +34,7 @@ window.addEventListener('keydown', (e) => {
 )
 
 function processKey(keyPressed) {
-    if ((!lastKeyPressed && '+-*/='.includes(keyPressed)) || //first key input can't be operator.  
+    if (//(!lastKeyPressed && '+-*/='.includes(keyPressed)) || first key input can't be operator.  
         (keyPressed === '.' && display.value.includes('.')) && displayInput.includes('.') || //ignore 2nd dot in number unless right after result
         (keyPressed === '←' && '+-*/='.includes(lastKeyPressed))) //ignore ← key after operator
     {
@@ -44,10 +46,12 @@ function processKey(keyPressed) {
         inputOperators.pop();
         inputOperators.push(keyPressed);
         lastKeyPressed = keyPressed;
+        updateSmallDisp();
         return
     } else if (lastKeyPressed === '=' && !'+-*/='.includes(keyPressed)) { //clear arrays if user input new num after last result)
         inputNums.splice(0, inputNums.length);
         inputOperators.splice(0, inputOperators.length);
+        result = '';
     }
     lastKeyPressed = keyPressed;
 
@@ -56,8 +60,10 @@ function processKey(keyPressed) {
     } else if (inputOperators.length >= 1) {
         storeInput(keyPressed);
         doMath();
+        updateSmallDisp();
     } else {
         storeInput(keyPressed);
+        updateSmallDisp();
     }
 }
 
@@ -65,7 +71,16 @@ function initCalc() {
     inputNums.splice(0, inputNums.length);
     inputOperators.splice(0, inputOperators.length);
     display.value = '0';
+    smallDisplay.value = '';
     displayInput = '0';
+    result = '';
+
+}
+
+function updateSmallDisp() {
+    smallDisplay.value = result ?
+        `${result} ${inputOperators[1] === '=' ? '' : inputOperators[1]}` :
+        `${inputNums[0]} ${inputOperators[0] ?? ''}${inputNums[1] ?? ''}`;
 }
 
 function populateNum(elem) {
@@ -99,14 +114,28 @@ function storeInput(op) {
     displayInput = '0';//clear input queue only after valid num input is captured
     if (op === '=' && inputNums.length <= 1) {
         return
-    } else {
-        inputOperators.push(op);
+    } else if (inputOperators.length === 0) {
+        inputOperators[0] = op;
+        // console.log('inputOperators', inputOperators);
     }
+    else if (inputOperators.length === 1) {
+        inputOperators[1] = op;
+    }
+    else {
+        inputOperators.shift();
+        inputOperators.push(op);
+        // console.log('inputOperators', inputOperators);
+    }
+    // smallDisplay.value = result ? `${result} ${inputOperators[1]}` : `${inputNums[0]} ${inputOperators[0] ?? ''} ${inputNums[1] ?? ''} `;
+
+    // inputOperators.push(op);
+
+
 }
 
 
 function doMath() {
-    switch (inputOperators[inputOperators.length - 2]) {
+    switch (inputOperators[0]) {
         case '/':
             result = !inputNums[1] ? 'ERROR' : inputNums[0] / inputNums[1]
             break;
