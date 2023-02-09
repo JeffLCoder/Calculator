@@ -15,25 +15,28 @@ main {
     padding: 3rem;
     flex-direction: column;
     align-items: center;
-    border: 1px solid blue;
+    border: 3px solid black;
+    border-radius: 4px;
+    box-shadow: 0 2rem 5rem rgba(0, 0, 0, .3);
 }
 
 #small-display {
     text-align: right;
-    font-size: 0.8rem;
+    font-size: 1rem;
     margin-top: 2rem;
     background-color: white;
     border-bottom: none;
-    width: 12rem;
+    width: 14rem;
 }
 
 #display {
     text-align: right;
-    font-size: 1rem;
+    font-size: 1.2rem;
+    font-weight: bold;
     margin-bottom: 2rem;
     background-color: white;
     border-top: none;
-    width: 12rem;
+    width: 14rem;
 }
 
 
@@ -55,6 +58,8 @@ input::-webkit-inner-spin-button {
     /* width: 90%; */
     grid-template-rows: repeat(5, 1fr);
     grid-template-columns: repeat(4, 1fr);
+    column-gap: 2px;
+    row-gap: 2px;
     align-content: center;
     justify-content: center;
     margin-bottom: 2rem;
@@ -67,6 +72,22 @@ div.key {
     width: 3rem;
     height: 3rem;
     cursor: pointer;
+    font-size: 1.2rem;
+    transition: all 0.2s;
+}
+
+div.key:active {
+    transform: translateY(2px);
+}
+
+.op-key {
+    background-color: lightgray;
+}
+
+.row1 {
+    background-color: darkgray;
+    color: white;
+    font-weight: bold;
 }
 
 .row1-col3 {
