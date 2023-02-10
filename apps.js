@@ -5,7 +5,7 @@ const inputOperators = [];
 const keys = document.querySelectorAll('.key');
 const display = document.getElementById('display');
 const smallDisplay = document.getElementById('small-display');
-let result;
+let result = '';
 let displayInput = '0';
 let lastKeyPressed;
 display.value = '0';
@@ -74,13 +74,14 @@ function initCalc() {
     smallDisplay.value = '';
     displayInput = '0';
     result = '';
+    lastKeyPressed = undefined;
 
 }
 
 function updateSmallDisp() {
-    smallDisplay.value = result ?
-        `${result} ${inputOperators[1] === '=' ? '' : inputOperators[1]}` :
-        `${inputNums[0]} ${inputOperators[0] ?? ''}${inputNums[1] ?? ''}`;
+    smallDisplay.value = result === '' ?
+        `${inputNums[0]} ${inputOperators[0] ?? ''}${inputNums[1] ?? ''}` :
+        `${result} ${inputOperators[1] === '=' ? '' : inputOperators[1]}`;
 }
 
 function populateNum(elem) {
